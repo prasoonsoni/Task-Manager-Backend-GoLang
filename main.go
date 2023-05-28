@@ -23,6 +23,7 @@ func main() {
 	r.HandleFunc("/create", controllers.CreateTask).Methods("POST")
 	r.HandleFunc("/delete/{id}", controllers.DeleteTask).Methods("DELETE")
 	r.HandleFunc("/update/{id}", controllers.UpdateTask).Methods("PUT")
+	r.HandleFunc("/complete/{id}", controllers.MarkTaskAsCompleted).Methods("PUT")
 
 	log.Fatal(http.ListenAndServe(":3000", r))
 	http.Handle("/", r)

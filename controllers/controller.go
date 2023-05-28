@@ -87,3 +87,23 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Updated Count:", result.ModifiedCount)
 	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Task Updated Successfully"})
 }
+
+func MarkTaskAsCompleted(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=> Mark Task As Completed /complete/{id}")
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+	var id string = params["id"]
+	_id, _ := primitive.ObjectIDFromHex(id)
+
+	filter := bson.M{"_id": _id}
+	update := bson.M{"$set": bson.M{"completed": true}}
+
+	result, err := db.TaskCollection.UpdateOne(context.Background(), filter, update, nil)
+	if err != nil {
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Updating Task"})
+	}
+	fmt.Println("Updated ID:", id)
+	fmt.Println("Updated Count:", result.ModifiedCount)
+	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Task Completed Successfully"})
+}
