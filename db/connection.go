@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -34,17 +33,3 @@ func Connect() {
 	// Collection Instance
 	fmt.Println("Collection instance is ready!!")
 }
-
-// Helper Functions - file
-
-
-// Delete All Task
-func deleteAllTask() {
-	filter := bson.D{{}}
-	deleteResult, err := TaskCollection.DeleteMany(context.Background(), filter, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Deleted Tasks:", deleteResult.DeletedCount)
-}
-

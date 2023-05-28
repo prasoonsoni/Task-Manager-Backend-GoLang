@@ -151,3 +151,15 @@ func GetAllTasks(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(&models.DataResponse{Success: true, Message: "Tasks Fetched Successfully", Data: tasks})
 }
+
+func DeleteAllTasks(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=> Delete All Tasks /delete")
+	w.Header().Set("Content-Type", "application/json")
+
+	result, err := db.TaskCollection.DeleteMany(context.Background(), bson.M{}, nil)
+	if err != nil {
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Deleting Tasks"})
+	}
+	fmt.Println("Deleted Tasks:", result.DeletedCount)
+	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Tasks Deleted Successfully"})
+}

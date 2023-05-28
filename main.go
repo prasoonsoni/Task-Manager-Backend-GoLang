@@ -23,6 +23,7 @@ func main() {
 	r.HandleFunc("/get", controllers.GetAllTasks).Methods("GET")
 	r.HandleFunc("/get/{id}", controllers.GetTaskById).Methods("GET")
 	r.HandleFunc("/create", controllers.CreateTask).Methods("POST")
+	r.HandleFunc("/delete", controllers.DeleteAllTasks).Methods("DELETE")
 	r.HandleFunc("/delete/{id}", controllers.DeleteTask).Methods("DELETE")
 	r.HandleFunc("/update/{id}", controllers.UpdateTask).Methods("PUT")
 	r.HandleFunc("/complete/{id}", controllers.MarkTaskAsCompleted).Methods("PUT")
