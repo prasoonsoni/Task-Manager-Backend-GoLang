@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/prasoonsoni/notes-backend-golang/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,7 +19,7 @@ var TaskCollection *mongo.Collection
 
 // connection with MongoDB
 
-func init() {
+func Connect() {
 	// client options
 	clientOptions := options.Client().ApplyURI(uri)
 
@@ -38,15 +37,6 @@ func init() {
 }
 
 // Helper Functions - file
-
-// Insert Task
-func insertTask(task models.Task) {
-	inserted, err := TaskCollection.InsertOne(context.Background(), task)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Inserted 1 task with ID:", inserted.InsertedID)
-}
 
 // Update Task
 func updateTask(taskId string) {

@@ -10,3 +10,7 @@ type Task struct {
 	Description string             `json:"description,omitempty"`
 	Completed   bool               `json:"completed,omitempty"`
 }
+
+func (task Task) IsEmpty() bool {
+	return task.Title == "" || task.Description == ""
+}
