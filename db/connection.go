@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -49,22 +48,3 @@ func deleteAllTask() {
 	fmt.Println("Deleted Tasks:", deleteResult.DeletedCount)
 }
 
-// Get All Tasks
-func getAllTasks() []primitive.M {
-	cursor, err := TaskCollection.Find(context.Background(), bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	var tasks []primitive.M
-
-	for cursor.Next(context.Background()) {
-		var task bson.M
-		err := cursor.Decode(&task)
-		if err != nil {
-			log.Fatal(err)
-		}
-		tasks = append(tasks, task)
-	}
-	defer cursor.Close(context.Background())
-	return tasks
-}

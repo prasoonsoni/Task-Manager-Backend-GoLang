@@ -127,3 +127,27 @@ func GetTaskById(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(&models.DataResponse{Success: true, Message: "Task Found Successfully", Data: task})
 }
+
+func GetAllTasks(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=> Get All Task /get")
+	w.Header().Set("Content-Type", "application/json")
+
+	cursor, err := db.TaskCollection.Find(context.Background(), bson.M{})
+
+	if err != nil {
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Fetching Tasks"})
+	}
+
+	var tasks []primitive.M
+	for cursor.Next(context.Background()) {
+		var task bson.M
+		err := cursor.Decode(&task)
+		if err != nil {
+			log.Fatal(err)
+		}
+		tasks = append(tasks, task)
+	}
+	defer cursor.Close(context.Background())
+
+	json.NewEncoder(w).Encode(&models.DataResponse{Success: true, Message: "Tasks Fetched Successfully", Data: tasks})
+}
