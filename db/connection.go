@@ -51,17 +51,6 @@ func updateTask(taskId string) {
 	fmt.Println("Modified Count:", result.ModifiedCount)
 }
 
-// Delete Task
-func deleteTask(taskId string) {
-	id, _ := primitive.ObjectIDFromHex(taskId)
-	filter := bson.M{"_id": id}
-	result, err := TaskCollection.DeleteOne(context.Background(), filter)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Deleted Count: ", result.DeletedCount)
-}
-
 // Delete All Task
 func deleteAllTask() {
 	filter := bson.D{{}}
