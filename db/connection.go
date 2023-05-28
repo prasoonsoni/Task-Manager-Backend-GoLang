@@ -38,18 +38,6 @@ func Connect() {
 
 // Helper Functions - file
 
-// Update Task
-func updateTask(taskId string) {
-	id, _ := primitive.ObjectIDFromHex(taskId)
-	filter := bson.M{"_id": id}
-	update := bson.M{"$set:": bson.M{"completed": true}}
-
-	result, err := TaskCollection.UpdateOne(context.Background(), filter, update)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Modified Count:", result.ModifiedCount)
-}
 
 // Delete All Task
 func deleteAllTask() {

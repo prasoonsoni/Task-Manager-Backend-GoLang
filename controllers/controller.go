@@ -15,7 +15,7 @@ import (
 )
 
 func CreateTask(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Create Task")
+	fmt.Println("=> Create Task /create")
 	w.Header().Set("Content-Type", "application/json")
 
 	var task models.Task
@@ -45,7 +45,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Create Task")
+	fmt.Println("=> Delete Task /delete/{id}")
 	w.Header().Set("Content-Type", "application/json")
 
 	params := mux.Vars(r)
@@ -56,7 +56,34 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Deleting Task"})
 	}
-	fmt.Println("Inserted ID:", id)
+	fmt.Println("Deleted ID:", id)
 	fmt.Println("Deleted Count:", result.DeletedCount)
 	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Task Deleted Successfully"})
+}
+
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=> Update Task /update/{id}")
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+	var id string = params["id"]
+	_id, _ := primitive.ObjectIDFromHex(id)
+
+	var task models.Task
+	err := json.NewDecoder(r.Body).Decode(&task)
+	if err != nil {
+		log.Fatal(err)
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Decoding Body"})
+		return
+	}
+	filter := bson.M{"_id": _id}
+	update := bson.M{"$set": bson.M{"title": task.Title, "description": task.Description}}
+
+	result, err := db.TaskCollection.UpdateOne(context.Background(), filter, update, nil)
+	if err != nil {
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "Error Updating Task"})
+	}
+	fmt.Println("Updated ID:", id)
+	fmt.Println("Updated Count:", result.ModifiedCount)
+	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Task Updated Successfully"})
 }
