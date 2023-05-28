@@ -12,6 +12,7 @@ import (
 	"github.com/prasoonsoni/notes-backend-golang/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func CreateTask(w http.ResponseWriter, r *http.Request) {
@@ -106,4 +107,23 @@ func MarkTaskAsCompleted(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Updated ID:", id)
 	fmt.Println("Updated Count:", result.ModifiedCount)
 	json.NewEncoder(w).Encode(&models.Response{Success: true, Message: "Task Completed Successfully"})
+}
+
+func GetTaskById(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("=> Get Task /get/{id}")
+	w.Header().Set("Content-Type", "application/json")
+
+	params := mux.Vars(r)
+
+	var id string = params["id"]
+	_id, _ := primitive.ObjectIDFromHex(id)
+
+	var task models.Task
+	filter := bson.M{"_id": _id}
+	err := db.TaskCollection.FindOne(context.Background(), filter, nil).Decode(&task)
+	if err == mongo.ErrNoDocuments {
+		json.NewEncoder(w).Encode(&models.Response{Success: false, Message: "No Task Found with given Id."})
+		return
+	}
+	json.NewEncoder(w).Encode(&models.DataResponse{Success: true, Message: "Task Found Successfully", Data: task})
 }

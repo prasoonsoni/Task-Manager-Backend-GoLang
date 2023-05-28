@@ -20,6 +20,7 @@ func main() {
 		w.Write([]byte("<h1>Welcome to Task Manager Backend API</h1>"))
 	})
 
+	r.HandleFunc("/get/{id}", controllers.GetTaskById).Methods("GET")
 	r.HandleFunc("/create", controllers.CreateTask).Methods("POST")
 	r.HandleFunc("/delete/{id}", controllers.DeleteTask).Methods("DELETE")
 	r.HandleFunc("/update/{id}", controllers.UpdateTask).Methods("PUT")
